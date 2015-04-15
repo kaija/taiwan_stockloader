@@ -1,0 +1,27 @@
+{
+  "name": "taiwan_stockloader",
+  "version": "1.0.0",
+  "description": "Download Taiwan stock data",
+  "main": "stockloader.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaija/taiwan_stockloader.git"
+  },
+  "keywords": [
+    "stock",
+    "taiwan"
+  ],
+  "author": "Kaija <kaija.chang@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kaija/taiwan_stockloader/issues"
+  },
+  "homepage": "https://github.com/kaija/taiwan_stockloader",
+  "dependencies": {
+    "promise": "^7.0.0",
+    "querystring": "^0.2.0"
+  }
+}
