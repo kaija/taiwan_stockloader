@@ -2,12 +2,17 @@ var http = require('http');
 var fs = require('fs');
 var querystring = require('querystring');
 var Promise = require('promise');
-
+var httpreq = require('httpreq');
 console.log("Start download stock information...");
 var day_diff = 60 * 60 * 24 * 1000;
 
+
+if(!fs.existsSync('data')){
+	fs.mkdirSync('data');
+}
+
 //start time
-var start_ts = new Date("2015/01/01").getTime()
+var start_ts = new Date("2015/04/01").getTime()
 //end time
 var stop_ts = new Date().getTime();
 
@@ -39,15 +44,25 @@ function downloadStock(start_ts)
 		var tw_month =  date.getMonth() + 1;
 		var tw_day = date.getDate();
 		var date_str = tw_year.toString() + '/' + twoDigit(tw_month) + '/' + twoDigit(tw_day);
-		var postData = querystring.stringify({
-			'download': 'csv',
-			'qdate': date_str,
-			'selectType': 'ALLBUT0999'
-		});
-		console.log(postData);
 		var fullYear = date.getFullYear().toString();
-		var file_str = fullYear + twoDigit(tw_month) + twoDigit(tw_day)+'.csv';
-		console.log(file_str);
+		var file_str = 'data/' + fullYear + twoDigit(tw_month) + twoDigit(tw_day)+'.csv';
+		var data = {file: file_str, body:''};
+		httpreq.post('http://www.tse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX.php',{
+			parameters:{
+				download: 'csv',
+				qdate: date_str,
+				selectType: 'ALLBUT0999'
+			},
+			binary: true
+		}, function(err, res){
+			if(err) {
+				console.log(err)
+			}else{
+				data.body = res.body;
+				fullfill(data);
+			}
+		});
+/*
 		var options = {
 			hostname:'www.tse.com.tw',
 			port: 80,
@@ -73,6 +88,7 @@ function downloadStock(start_ts)
 		});
 		req.write(postData);
 		req.end();
+*/
 	});
 }
 
