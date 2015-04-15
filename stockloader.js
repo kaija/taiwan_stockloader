@@ -14,7 +14,7 @@ if(!fs.existsSync('data')){
 //start time
 var start_ts = new Date("2015/04/01").getTime()
 //end time
-var stop_ts = new Date().getTime();
+var stop_ts = new Date().getTime() - day_diff; //Not download today
 
 function twoDigit(num)
 {
