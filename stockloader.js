@@ -47,7 +47,7 @@ function downloadStock(start_ts)
 		var fullYear = date.getFullYear().toString();
 		var file_str = 'data/' + fullYear + twoDigit(tw_month) + twoDigit(tw_day)+'.csv';
 		var data = {file: file_str, body:''};
-		httpreq.post('http://www.tse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX.php',{
+		httpreq.post('http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX.php',{
 			parameters:{
 				download: 'csv',
 				qdate: date_str,
