@@ -1,0 +1,11 @@
+{
+  "name": "stockid-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kaija Chang <kaija.chang@gmail.com> (www.penroses.co)",
+  "license": "ISC"
+}
