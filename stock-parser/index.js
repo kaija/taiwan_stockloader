@@ -11,6 +11,7 @@ var pool = poolModule.Pool({
   },
   max: 1000,
   min: 2,
+  refreshIdle: false,
   idleTimeoutMillis : 30000,
   log: false
 });
@@ -22,7 +23,7 @@ var client = new elasticsearch.Client({
   }
 );
 */
-
+var stockIdPrefix = 'TW';
 var redis = require('redis');
 var cli = redis.createClient();
 
@@ -69,11 +70,24 @@ while(start_ts < stop_ts){
           var head = data[0].split('"');
           var stock_id = '';
           if(head.length == 2){
-            stock_id = head[1].trim();
+            stock_id = stockIdPrefix + head[1].trim();
           }else{
-            stock_id = data[0].trim();
+            stock_id = stockIdPrefix + head[0].trim();
           }
           //stock.id = stock_id;
+          stock.volume = parseInt(data[2]);
+          stock.open = parseFloat(data[5]);
+          if(isNaN(stock.open)){
+            stock.open = -1;
+          }
+          stock.high = parseFloat(data[6]);
+          if(isNaN(stock.high)){
+            stock.high = -1;
+          }
+          stock.low = parseFloat(data[7]);
+          if(isNaN(stock.low)){
+            stock.low = -1;
+          }
           stock.val = parseFloat(data[8]);
           if(isNaN(stock.val)){
             stock.val = -1;
@@ -81,7 +95,9 @@ while(start_ts < stop_ts){
           stock.date = daystr;
           stock.per = parseFloat(data[15]);
           stock.buyQuantity = parseInt(data[12]);
+          stock.buyPrice = parseInt(data[11]);
           stock.saleQuantity = parseInt(data[14]);
+          stock.salePrice = parseInt(data[13]);
           if(!stock.buyQuantity) stock.buyQuantity = 0;
           if(!stock.saleQuantity) stock.saleQuantity = 0;
           if(stock.val != -1){
@@ -99,24 +115,19 @@ while(start_ts < stop_ts){
     console.log(file_name + ' not exist?');
   }
 }
-
-console.log('Finish');
-
-
+var total = 0;
+var added = 0;
 for(i in history)
 {
+  total++;
   //console.log(i);
   pool.acquire(function(err, client){
-    /*
-    if(i == '4906'){
-      console.log(history[i]);
-    }
-    */
     client.set(i, JSON.stringify(history[i]), function(err, res){
+      added++;
+      if(added == total){
+        console.log("Import to Redis done");
+      }
       pool.release(client);
     });
   });
 }
-console.log('Write to DB done');
-
-
