@@ -39,8 +39,9 @@ if(raw){
     }
   }
 }
-
-
+/*
+ *  Push to elasticsearch
+ */
 for (j in stocklist){
   //console.log(stocklist[i]);
   pool.acquire(function(err, cli){
@@ -57,4 +58,50 @@ for (j in stocklist){
     });
   });
 }
+
+
+var emstocklist = [];
+
+var eraw = fs.readFileSync('stocklist-em.txt');
+if(eraw){
+  var rows = eraw.toString().split('\n');
+  for(i in rows){
+    var line = rows[i].split(',');
+    var id = line[0].trim();
+    var name = line[1];
+    var cat = line[5];
+    if(id.length > 0){
+      var stock = {};
+      stock['id'] = id;
+      stock['name'] = name;
+      stock['category'] = cat;
+      stock['type'] = 'emerging';
+      emstocklist.push(stock);
+    }
+  }
+}
+
+/*
+ *  Push to elasticsearch
+ */
+
+for (j in emstocklist){
+  console.log(emstocklist[j]);
+/*
+  pool.acquire(function(err, cli){
+    var o = {
+      index: esIndex,
+      type: esType,
+      body: stocklist[j]
+    };
+    console.log(o);
+    cli.create(o, function(err, res){
+      //console.log(stocklist[j].id + " save to ES");
+      //console.log(res);
+      pool.release(cli);
+    });
+  });
+*/
+}
+
 
