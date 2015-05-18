@@ -28,4 +28,4 @@ f = open('stocklist.txt', 'r')
 lines = f.readlines()
 for line in lines:
   r = line.split(',')
-  print import_stock_id(es, r[0], r[1], r[5], 'emerging')
+  print import_stock_id(es, r[0], r[1], r[5], "")

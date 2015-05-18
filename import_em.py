@@ -41,22 +41,22 @@ def dump(key, value):
 	print json.dumps(value)
 
 def save2redis(key, value):
-	old = rdb.get("TW" + key)
+	old = rdb.get("TWE" + key)
 	if old is None:
 		val = []
 		val.append(value)
-		rdb.set("TW"+key ,json.dumps(val))
+		rdb.set("TWE"+key ,json.dumps(val))
 	else:
 		l = json.loads(old)
 		l.append(value)
-		rdb.set("TW"+key ,json.dumps(l))
+		rdb.set("TWE"+key ,json.dumps(l))
 		
 
 
 today = datetime.date.today()
 one_day = timedelta(days=1);
 
-start_day = datetime.date(2015, 5, 14);
+start_day = datetime.date(2007, 7, 1);
 #start_day = datetime.date(2015, 5, 14);
 
 print "Import from " + start_day.strftime("%Y-%m-%d") + " to " + today.strftime("%Y-%m-%d")
@@ -80,7 +80,8 @@ while dl_date < today:
 			head = r[0].split("\"")
 			sid = head[1].strip(" ")
 			obj = {"volume": convint(rv(r[8])), "open": convfloat(r[4]), "high": convfloat(r[5]), "low": convfloat(r[6]), "val": convfloat(r[2]), "date": dl_date.strftime("%Y-%m-%d"), "avg": convfloat(r[7]), "buyPrice": convfloat(r[11]), "salePrice": convfloat(r[12])}
-			dump(sid, obj)
+			#dump(sid, obj)
+			save2redis(sid, obj)
 
 	dl_date += one_day
 
