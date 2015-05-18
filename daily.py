@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import datetime
 import httplib
 import urllib
@@ -44,7 +45,6 @@ def save2redis(key, value):
 
 
 today = datetime.date.today()
-#today = datetime.date(2015, 5, 15)
 one_day = timedelta(days=1)
 dl_date = today
 
